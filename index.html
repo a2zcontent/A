@@ -852,9 +852,9 @@
   "subtitle": "Get instant lifetime access to 1,00,000+ High-Engagement Viral Reels, AI Motivation Clips, Trending Meme Templates, Luxury Lifestyle Videos, and Copyright-Free Background Music — neatly organized into ready-to-upload folders for Instagram Reels, YouTube Shorts, and Facebook Pages.",
   "salePrice": 99,
   "mrpPrice": 699,
-  "dpImage": "Dp.jpg",
-  "coverImage": "banner.jpg",
-  "galleryImage": "preview.jpg",
+  "dpImage": "./Dp.PNG",
+  "coverImage": "./banner.PNG",
+  "galleryImage": "./preview.jpg",
   "featuresList": "1,00,000+ Ready-to-Post Viral Reels & Shorts (No Watermark)\nTrending AI Motivation, Gym & Luxury Lifestyle Clips\n5,000+ Viral Hindi & English Meme Templates + Sound Effects\nCopyright-Free Background Music & Cinematic Transitions Pack\nMonetization & Growth Blueprint Guide (Instagram + YouTube)\nOrganized Google Drive Folders + Lifetime Free Updates",
   "rev1Name": "Hardik Mehra",
   "rev1Text": "The variety is insane! Everything is neatly arranged in Hindi and opens smoothly on mobile. Totally worth the price.",
@@ -933,9 +933,9 @@
             'Get instant lifetime access to 1,00,000+ High-Engagement Viral Reels, AI Motivation Clips, Trending Meme Templates, Luxury Lifestyle Videos, and Copyright-Free Background Music — neatly organized into ready-to-upload folders for Instagram Reels, YouTube Shorts, and Facebook Pages.',
           salePrice: 99,
           mrpPrice: 699,
-          dpImage: 'Dp.jpg',
-          coverImage: 'banner.jpg',
-          galleryImage: 'preview.jpg',
+          dpImage: './Dp.PNG',
+          coverImage: './banner.PNG',
+          galleryImage: './preview.jpg',
           featuresList:
             '1,00,000+ Ready-to-Post Viral Reels & Shorts (No Watermark)\nTrending AI Motivation, Gym & Luxury Lifestyle Clips\n5,000+ Viral Hindi & English Meme Templates + Sound Effects\nCopyright-Free Background Music & Cinematic Transitions Pack\nMonetization & Growth Blueprint Guide (Instagram + YouTube)\nOrganized Google Drive Folders + Lifetime Free Updates',
           rev1Name: 'Hardik Mehra',
@@ -1039,22 +1039,36 @@
           return;
         }
 
-        var triedLowercase = false;
+        // Build seamless .PNG / .png / .JPG / .jpg / lowercase fallback candidate chain for GitHub Pages
+        var candidates = [src];
+        var cleanSrc = String(src).trim();
+        if (/^(?:\.\/)?Dp\.(png|jpg|jpeg)$/i.test(cleanSrc)) {
+          candidates = ['./Dp.PNG', './dp.PNG', './Dp.png', './Dp.JPG', './Dp.jpg', './dp.png', './dp.jpg'];
+        } else if (/^(?:\.\/)?banner\.(png|jpg|jpeg)$/i.test(cleanSrc)) {
+          candidates = ['./banner.PNG', './Banner.PNG', './banner.png', './banner.JPG', './banner.jpg'];
+        } else if (/^(?:\.\/)?preview\.(png|jpg|jpeg)$/i.test(cleanSrc)) {
+          candidates = ['./preview.jpg', './preview.JPG', './preview.PNG', './preview.png', './Preview.jpg'];
+        }
+
+        var attemptIndex = 0;
+
         imgEl.onload = function () {
           imgEl.classList.remove('hidden');
           if (typeof onVisible === 'function') onVisible();
         };
+
         imgEl.onerror = function () {
-          if (!triedLowercase && src === 'Dp.jpg') {
-            triedLowercase = true;
-            imgEl.src = 'dp.jpg';
+          attemptIndex += 1;
+          if (attemptIndex < candidates.length) {
+            imgEl.src = candidates[attemptIndex];
             return;
           }
           imgEl.onerror = null;
           imgEl.classList.add('hidden');
           if (typeof onAllFailed === 'function') onAllFailed();
         };
-        imgEl.src = src;
+
+        imgEl.src = candidates[0];
       }
 
       function renderStorefront() {
@@ -1075,8 +1089,8 @@
         $('sheetByCreator').textContent = 'by ' + (CFG.creatorName || 'Pritam Mishra');
         $('creatorCardDpFallback').textContent = getInitials(CFG.creatorName);
 
-        // DP Image (Loads Dp.jpg by default with automatic fallback to dp.jpg & PM badge)
-        var dpSrc = CFG.dpImage !== undefined && CFG.dpImage !== null ? CFG.dpImage : 'Dp.jpg';
+        // DP Image (Explicitly ./Dp.PNG first, then smart fallback)
+        var dpSrc = CFG.dpImage !== undefined && CFG.dpImage !== null ? CFG.dpImage : './Dp.PNG';
         bindAssetImage(
           $('topDpImg'),
           dpSrc,
@@ -1099,9 +1113,9 @@
           }
         );
 
-        // Hero Banner & Checkout Thumbnail (Loads banner.jpg by default with graceful fallback artwork)
-        var coverSrc = CFG.coverImage !== undefined && CFG.coverImage !== null ? CFG.coverImage : 'banner.jpg';
-        var gallerySrc = CFG.galleryImage !== undefined && CFG.galleryImage !== null ? CFG.galleryImage : 'preview.jpg';
+        // Hero Banner & Checkout Thumbnail (Explicitly ./banner.PNG first, then smart fallback)
+        var coverSrc = CFG.coverImage !== undefined && CFG.coverImage !== null ? CFG.coverImage : './banner.PNG';
+        var gallerySrc = CFG.galleryImage !== undefined && CFG.galleryImage !== null ? CFG.galleryImage : './preview.jpg';
 
         bindAssetImage(
           $('heroCoverImg'),
@@ -1125,7 +1139,7 @@
           }
         );
 
-        // Second Showcase Photo Below Content (Loads preview.jpg by default with graceful fallback card)
+        // Second Showcase Photo Below Content (Loads ./preview.jpg with fallback)
         bindAssetImage(
           $('secondaryShowcaseImg'),
           gallerySrc,
