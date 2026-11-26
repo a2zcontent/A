@@ -1842,19 +1842,24 @@ Get instant access to a massive collection of Hindi entertainment and viral albu
     function handleCreatorDpUpload(event) {
       const file = event.target.files[0];
       if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        config.creatorDpData = e.target.result;
-        renderPageFromConfig();
-        showToast('Creator DP updated!');
-      };
-      reader.readAsDataURL(file);
+      compressImageFile(file, 360, 0.82)
+        .then((compressedDataUrl) => {
+          config.creatorDpData = compressedDataUrl;
+          document.getElementById('inputCreatorDpUrl').value = '';
+          persistConfigSafely();
+          renderPageFromConfig();
+          showToast('Creator DP compressed & saved!');
+        })
+        .catch(() => {
+          showToast('Failed to process image. Please try another photo.');
+        });
     }
 
     function resetCreatorDp() {
       config.creatorDpData = '';
       document.getElementById('inputCreatorDpUrl').value = '';
       document.getElementById('uploadCreatorDpInput').value = '';
+      persistConfigSafely();
       renderPageFromConfig();
       showToast('Creator DP reset!');
     }
@@ -1862,17 +1867,22 @@ Get instant access to a massive collection of Hindi entertainment and viral albu
     function handleImageFileUpload(event, photoNum) {
       const file = event.target.files[0];
       if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        if (photoNum === 1) {
-          config.photo1Data = e.target.result;
-        } else {
-          config.photo2Data = e.target.result;
-        }
-        renderPageFromConfig();
-        showToast(`Photo ${photoNum} updated!`);
-      };
-      reader.readAsDataURL(file);
+      compressImageFile(file, 1080, 0.80)
+        .then((compressedDataUrl) => {
+          if (photoNum === 1) {
+            config.photo1Data = compressedDataUrl;
+            document.getElementById('inputPhoto1Url').value = '';
+          } else {
+            config.photo2Data = compressedDataUrl;
+            document.getElementById('inputPhoto2Url').value = '';
+          }
+          persistConfigSafely();
+          renderPageFromConfig();
+          showToast(`Photo ${photoNum} compressed & saved!`);
+        })
+        .catch(() => {
+          showToast('Failed to compress photo. Please try a smaller image or URL.');
+        });
     }
 
     function resetPhotoToDefault(photoNum) {
@@ -1885,8 +1895,63 @@ Get instant access to a massive collection of Hindi entertainment and viral albu
         document.getElementById('inputPhoto2Url').value = '';
         document.getElementById('uploadPhoto2Input').value = '';
       }
+      persistConfigSafely();
       renderPageFromConfig();
       showToast(`Photo ${photoNum} reset to default!`);
+    }
+
+    function compressImageFile(file, maxDimension = 1080, quality = 0.8) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onerror = () => reject(new Error('File read error'));
+        reader.onload = function (e) {
+          const img = new Image();
+          img.onerror = () => reject(new Error('Image decode error'));
+          img.onload = function () {
+            try {
+              let width = img.naturalWidth || img.width;
+              let height = img.naturalHeight || img.height;
+              if (width > maxDimension || height > maxDimension) {
+                if (width >= height) {
+                  height = Math.round((height * maxDimension) / width);
+                  width = maxDimension;
+                } else {
+                  width = Math.round((width * maxDimension) / height);
+                  height = maxDimension;
+                }
+              }
+
+              const canvas = document.createElement('canvas');
+              canvas.width = width;
+              canvas.height = height;
+              const ctx = canvas.getContext('2d');
+              ctx.fillStyle = '#ffffff';
+              ctx.fillRect(0, 0, width, height);
+              ctx.drawImage(img, 0, 0, width, height);
+
+              let outputDataUrl = canvas.toDataURL('image/jpeg', quality);
+              if (outputDataUrl.length > 900000) {
+                outputDataUrl = canvas.toDataURL('image/jpeg', 0.65);
+              }
+              resolve(outputDataUrl);
+            } catch (err) {
+              reject(err);
+            }
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function persistConfigSafely() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
+        return true;
+      } catch (e) {
+        showToast('Storage quota full! Use image URL or smaller photos.');
+        return false;
+      }
     }
 
     function saveAdminSettings() {
@@ -1916,299 +1981,15 @@ Get instant access to a massive collection of Hindi entertainment and viral albu
       config.autoRedirect = document.getElementById('inputAutoRedirect').checked;
       config.adminPin = document.getElementById('inputAdminPin').value.trim() || '1249';
 
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
-      } catch (e) {}
+      const savedOk = persistConfigSafely();
 
       renderPageFromConfig();
       if (config.metaPixelId && /^\d{10,20}$/.test(config.metaPixelId)) {
         setupMetaPixel(config.metaPixelId);
       }
       closeAdminDrawer();
-      showToast('All settings saved!');
-    }
-
-    // =========================================================================
-    // COSMOFEED-STYLE ORDERS / LEADS VIEWER & GOOGLE APPS SCRIPT HELPER
-    // =========================================================================
-    function setOrderFilter(filter) {
-      currentOrderFilter = filter;
-      ['all', 'paid', 'abandoned'].forEach(f => {
-        const btn = document.getElementById(`orderFilter-${f}`);
-        if (!btn) return;
-        btn.className = f === filter
-          ? 'px-3 py-1.5 rounded-full bg-neutral-950 text-white transition cursor-pointer'
-          : 'px-3 py-1.5 rounded-full bg-gray-100 text-gray-600 hover:text-gray-900 transition cursor-pointer';
-      });
-      renderAdminOrdersList();
-    }
-
-    function renderAdminOrdersList() {
-      const container = document.getElementById('adminOrdersListContainer');
-      const countBadge = document.getElementById('ordersTotalCountBadge');
-      if (!container) return;
-
-      let orders = [];
-      try {
-        orders = JSON.parse(localStorage.getItem(LOCAL_ORDERS_LOG_KEY) || '[]');
-      } catch (e) {}
-
-      const q = (document.getElementById('orderSearchInput')?.value || '').trim().toLowerCase();
-      const filtered = orders.filter(o => {
-        if (currentOrderFilter === 'paid' && o.rawState !== 'paid') return false;
-        if (currentOrderFilter === 'abandoned' && o.rawState === 'paid') return false;
-        if (q) {
-          const hay = `${o.email} ${o.phone} ${o.orderId} ${o.productName}`.toLowerCase();
-          if (!hay.includes(q)) return false;
-        }
-        return true;
-      });
-
-      if (countBadge) {
-        countBadge.textContent = `${filtered.length} transaction${filtered.length === 1 ? '' : 's'}`;
-      }
-
-      if (!filtered.length) {
-        container.innerHTML = `<div class="text-center py-6 text-xs text-gray-400 border border-dashed border-gray-200 rounded-2xl">No matching transactions found.</div>`;
-        return;
-      }
-
-      container.innerHTML = filtered.map(o => {
-        const isPaid = o.rawState === 'paid';
-        const amountBadge = isPaid
-          ? `<span class="text-xs font-extrabold text-emerald-600">+${escapeHtml(o.displayAmount)}</span>`
-          : `<span class="text-xs font-bold text-gray-500 inline-flex items-center gap-1">${escapeHtml(o.displayAmount)} <span class="text-amber-500">⚠</span></span>`;
-
-        return `
-          <div onclick="openOrderDetailById('${escapeHtml(o.orderId)}')" class="p-3 rounded-2xl border border-gray-200 bg-white hover:bg-gray-50 transition flex items-center justify-between gap-2 cursor-pointer">
-            <div class="min-w-0 flex-1">
-              <div class="text-xs font-bold text-gray-900 underline underline-offset-2 truncate">${escapeHtml(o.phone)}</div>
-              <div class="text-[11px] text-gray-600 underline underline-offset-2 truncate">${escapeHtml(o.email)}</div>
-              <div class="flex items-center gap-1.5 mt-1">
-                <span class="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-purple-50 text-purple-700">Payment Pages</span>
-                <span class="text-[10px] text-gray-400 truncate">${escapeHtml(o.timestamp)}</span>
-              </div>
-            </div>
-            <div class="flex items-center gap-2 shrink-0">
-              ${amountBadge}
-              <span class="w-6 h-6 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 text-xs">↗</span>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function openOrderDetailById(orderId) {
-      let orders = [];
-      try {
-        orders = JSON.parse(localStorage.getItem(LOCAL_ORDERS_LOG_KEY) || '[]');
-      } catch (e) {}
-      const order = orders.find(o => o.orderId === orderId);
-      if (!order) return;
-
-      const isPaid = order.rawState === 'paid';
-      document.getElementById('detailPaymentId').textContent = order.orderId;
-      const statusEl = document.getElementById('detailStatusText');
-      statusEl.textContent = isPaid ? 'Payment Successful (PAID)' : 'Payment cancelled by customer';
-      statusEl.className = isPaid ? 'font-bold text-emerald-600' : 'font-bold text-rose-600';
-
-      document.getElementById('detailProductName').textContent = order.productName;
-      document.getElementById('detailDate').textContent = order.timestamp;
-      document.getElementById('detailAmountPaid').textContent = isPaid ? order.displayAmount : '--';
-      document.getElementById('detailPaymentMethod').textContent = order.paymentMethod || '--';
-      document.getElementById('detailUtrNumber').textContent = order.utrNumber || '--';
-
-      const emailEl = document.getElementById('detailEmail');
-      emailEl.textContent = order.email;
-      emailEl.href = `mailto:${order.email}`;
-
-      const phoneEl = document.getElementById('detailPhone');
-      phoneEl.textContent = order.phone;
-      phoneEl.href = `tel:${order.phone.replace(/[^+\d]/g, '')}`;
-
-      document.getElementById('detailWhatsappBtn').href = order.whatsappLink || buildWhatsappUrl(order.phone, order.productName, isPaid);
-
-      const modal = document.getElementById('orderDetailModal');
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-    }
-
-    function closeOrderDetailModal() {
-      const modal = document.getElementById('orderDetailModal');
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-    }
-
-    function exportOrdersCsv() {
-      let orders = [];
-      try {
-        orders = JSON.parse(localStorage.getItem(LOCAL_ORDERS_LOG_KEY) || '[]');
-      } catch (e) {}
-      if (!orders.length) {
-        showToast('No transactions to export!');
-        return;
-      }
-      const headers = ['Date & Time', 'Order ID', 'Status', 'Product Name', 'Amount Paid', 'Email', 'Phone', 'WhatsApp Link'];
-      const rows = orders.map(o => [
-        `"${(o.timestamp || '').replace(/"/g, '""')}"`,
-        `"${(o.orderId || '').replace(/"/g, '""')}"`,
-        `"${(o.status || '').replace(/"/g, '""')}"`,
-        `"${(o.productName || '').replace(/"/g, '""')}"`,
-        `"${(o.amountPaid || '').replace(/"/g, '""')}"`,
-        `"${(o.email || '').replace(/"/g, '""')}"`,
-        `"${(o.phone || '').replace(/"/g, '""')}"`,
-        `"${(o.whatsappLink || '').replace(/"/g, '""')}"`
-      ].join(','));
-
-      const csvContent = [headers.join(','), ...rows].join('\n');
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'transactions_leads.csv';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      showToast('CSV exported!');
-    }
-
-    function copyAppsScriptCode() {
-      const scriptCode = `function doPost(e) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  if (sheet.getLastRow() === 0) {
-    sheet.appendRow(["Date & Time", "Order / Payment ID", "Status", "Product Name", "Customer Email", "Phone Number", "Amount", "WhatsApp Follow-up"]);
-  }
-  var data = JSON.parse(e.postData.contents);
-  var phoneClean = (data.phone || "").replace(/[^0-9]/g, "");
-  var waLink = phoneClean ? "https://wa.me/" + phoneClean : "";
-  sheet.appendRow([
-    data.timestamp || new Date().toLocaleString("en-IN"),
-    data.orderId || "",
-    data.status || "",
-    data.productName || data.product || "",
-    data.email || "",
-    data.phone || "",
-    data.amount || "",
-    waLink
-  ]);
-  return ContentService.createTextOutput(JSON.stringify({ result: "success" })).setMimeType(ContentService.MimeType.JSON);
-}`;
-      copyTextToClipboard(scriptCode, 'Apps Script code copied!');
-    }
-
-    function testGoogleSheetWebhook() {
-      const url = document.getElementById('inputGoogleSheetWebhook').value.trim();
-      if (!url || !url.startsWith('http')) {
-        showToast('Please paste your Google Apps Script URL first!');
-        return;
-      }
-      config.googleSheetWebhook = url;
-      sendOrderToGoogleSheetAndLog({
-        orderId: 'cf_test_' + Date.now().toString(36),
-        status: 'PAID',
-        productName: config.title,
-        amount: Number(config.salePrice) || 99,
-        email: 'test.buyer@gmail.com',
-        phone: '+91 9876543210'
-      });
-      renderAdminOrdersList();
-      showToast('Test row sent to your Google Sheet!');
-    }
-
-    function exportCleanCustomerHtml() {
-      saveAdminSettings();
-      const cloneDoc = document.documentElement.cloneNode(true);
-      ['adminPinModal', 'adminSettingsDrawer', 'adminFooterTrigger', 'orderDetailModal'].forEach(id => {
-        const el = cloneDoc.querySelector('#' + id);
-        if (el) el.remove();
-      });
-
-      let htmlOut = '<!DOCTYPE html>\n' + cloneDoc.outerHTML;
-      const safeConfig = { ...config, adminPin: '' };
-      htmlOut = htmlOut.replace(
-        /const DEFAULT_CONFIG = \{[\s\S]*?\};/,
-        `const DEFAULT_CONFIG = ${JSON.stringify(safeConfig, null, 2)};`
-      );
-
-      const blob = new Blob([htmlOut], { type: 'text/html;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'index.html';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      showToast('Clean customer index.html exported!');
-    }
-
-    // =========================================================================
-    // HELPERS & INITIALIZATION
-    // =========================================================================
-    function toggleFaq(i) {
-      const content = document.getElementById(`faq-content-${i}`);
-      const icon = document.getElementById(`faq-icon-${i}`);
-      const hidden = content.classList.contains('hidden');
-      content.classList.toggle('hidden', !hidden);
-      icon.classList.toggle('rotate-180', hidden);
-    }
-
-    function showToast(msg) {
-      const toast = document.getElementById('toast');
-      document.getElementById('toastMessage').textContent = msg;
-      toast.classList.remove('opacity-0');
-      clearTimeout(window.__toastTimer);
-      window.__toastTimer = setTimeout(() => {
-        toast.classList.add('opacity-0');
-      }, 2600);
-    }
-
-    function copyTextToClipboard(text, message) {
-      const inp = document.createElement('input');
-      inp.value = text;
-      document.body.appendChild(inp);
-      inp.select();
-      try { document.execCommand('copy'); } catch (e) {}
-      document.body.removeChild(inp);
-      showToast(message);
-    }
-
-    function copyPageLink() {
-      copyTextToClipboard(window.location.href, 'Link Copied!');
-    }
-
-    function copyBundleAccessLink() {
-      copyTextToClipboard(document.getElementById('bundleAccessUrl').textContent, 'Access link copied!');
-    }
-
-    function initApp() {
-      try {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) {
-          config = { ...DEFAULT_CONFIG, ...JSON.parse(saved) };
-        }
-      } catch (e) {}
-
-      renderPageFromConfig();
-
-      if (config.metaPixelId && /^\d{10,20}$/.test(config.metaPixelId.trim())) {
-        setupMetaPixel(config.metaPixelId.trim());
-        fireMetaEvent('PageView');
-        fireMetaEvent('ViewContent', {
-          content_ids: ['viral_video_bundle_99'],
-          content_name: config.title,
-          content_type: 'product',
-          value: Number(config.salePrice) || 99,
-          currency: 'INR'
-        });
-      }
-
-      handleVerifiedCashfreeReturn();
-
-      const params = new URLSearchParams(window.location.search);
-      if (params.get('admin') === '1' && document.getElementById('adminPinModal')) {
-        promptAdminAccess();
+      if (savedOk) {
+        showToast('All settings saved!');
       }
     }
 
