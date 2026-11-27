@@ -40,15 +40,16 @@
       --text-secondary: #334155;
       --text-muted: #64748b;
       --border-hairline: #e2e8f0;
-      --brand-blue: #2563eb;
-      --brand-blue-dark: #1d4ed8;
-      --brand-blue-soft: #eff6ff;
+      --btn-dark: #111827;
+      --btn-dark-hover: #1f2937;
+      --accent-blue: #2563eb;
+      --accent-blue-soft: #eff6ff;
       --success-green: #15803d;
       --success-bg: #dcfce7;
-      --radius-md: 12px;
+      --radius-md: 10px;
       --radius-lg: 14px;
       --radius-pill: 999px;
-      --shadow-sticky: 0 -4px 18px rgba(15, 23, 42, 0.06);
+      --shadow-sticky: 0 -6px 20px rgba(15, 23, 42, 0.08);
     }
 
     * {
@@ -63,7 +64,7 @@
       color: var(--text-primary);
       line-height: 1.55;
       -webkit-font-smoothing: antialiased;
-      padding-bottom: 86px;
+      padding-bottom: 112px;
       content-visibility: auto;
     }
 
@@ -76,7 +77,7 @@
       border-right: 1px solid #f1f5f9;
     }
 
-    /* Cosmofeed Top Creator Header */
+    /* Top Creator Header */
     .cf-topbar {
       display: flex;
       align-items: center;
@@ -110,7 +111,7 @@
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      background: var(--brand-blue);
+      background: var(--btn-dark);
       color: #ffffff;
       font-size: 12px;
       font-weight: 700;
@@ -133,8 +134,8 @@
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      background: var(--brand-blue-soft);
-      color: var(--brand-blue);
+      background: var(--accent-blue-soft);
+      color: var(--accent-blue);
       font-size: 11px;
       font-weight: 700;
       padding: 4px 10px;
@@ -142,10 +143,10 @@
       flex-shrink: 0;
     }
 
-    /* Hero Banner & Main Product Info */
+    /* Hero Banner & Main Product Info (No Inline CTA Button — CTA Lives in Bottom Bar) */
     .cf-hero {
       background: #ffffff;
-      padding-bottom: 18px;
+      padding-bottom: 16px;
       border-bottom: 8px solid #f8fafc;
     }
 
@@ -173,7 +174,7 @@
       color: var(--text-primary);
       line-height: 1.32;
       letter-spacing: -0.015em;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .cf-price-wrap {
@@ -181,11 +182,10 @@
       align-items: center;
       gap: 8px;
       flex-wrap: wrap;
-      margin-bottom: 14px;
     }
 
     .cf-price-now {
-      font-size: 22px;
+      font-size: 21px;
       font-weight: 800;
       color: var(--text-primary);
     }
@@ -206,36 +206,7 @@
       border-radius: var(--radius-pill);
     }
 
-    .cf-buy-btn {
-      width: 100%;
-      background: var(--brand-blue);
-      color: #ffffff;
-      border: none;
-      border-radius: var(--radius-md);
-      padding: 14px 16px;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background 0.15s ease, transform 0.1s ease;
-    }
-
-    .cf-buy-btn:hover {
-      background: var(--brand-blue-dark);
-    }
-
-    .cf-buy-btn:active {
-      transform: scale(0.99);
-    }
-
-    .cf-sub-assurance {
-      margin-top: 8px;
-      text-align: center;
-      font-size: 12px;
-      color: var(--text-muted);
-      font-weight: 500;
-    }
-
-    /* Clean Cosmofeed White Sections */
+    /* Clean Storefront Sections */
     .cf-section {
       background: #ffffff;
       padding: 18px 16px;
@@ -245,7 +216,7 @@
     }
 
     .cf-section-title {
-      font-size: 12.5px;
+      font-size: 12px;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.05em;
@@ -280,8 +251,8 @@
       width: 20px;
       height: 20px;
       border-radius: 50%;
-      background: var(--brand-blue-soft);
-      color: var(--brand-blue);
+      background: var(--accent-blue-soft);
+      color: var(--accent-blue);
       font-size: 12px;
       font-weight: 800;
       display: inline-flex;
@@ -335,7 +306,7 @@
       width: 48px;
       height: 48px;
       border-radius: 50%;
-      background: var(--brand-blue);
+      background: var(--btn-dark);
       color: #ffffff;
       font-size: 15px;
       font-weight: 700;
@@ -491,7 +462,7 @@
       cursor: pointer;
     }
 
-    /* Sticky Bottom Bar (Cosmofeed Style) */
+    /* Bottom Sticky Bar Matching Example Video (Amount total + BUY NOW ->) */
     .cf-sticky-bar {
       position: fixed;
       left: 0;
@@ -506,40 +477,70 @@
     .cf-sticky-inner {
       max-width: 480px;
       margin: 0 auto;
-      padding: 10px 16px;
+      padding: 10px 16px 12px;
+    }
+
+    .cf-amount-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      margin-bottom: 8px;
+      font-size: 13px;
     }
 
-    .cf-sticky-label {
-      font-size: 11px;
-      font-weight: 600;
+    .cf-amount-label {
       color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .cf-amount-values {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .cf-sticky-mrp {
+      color: var(--text-muted);
+      text-decoration: line-through;
+      font-size: 13px;
+      font-weight: 500;
     }
 
     .cf-sticky-price {
-      font-size: 18px;
-      font-weight: 800;
       color: var(--text-primary);
+      font-size: 15px;
+      font-weight: 800;
     }
 
     .cf-sticky-btn {
-      flex: 1;
-      max-width: 240px;
-      background: var(--brand-blue);
+      width: 100%;
+      background: var(--btn-dark);
       color: #ffffff;
       border: none;
       border-radius: var(--radius-md);
-      padding: 12px 16px;
+      padding: 13px 18px;
       font-size: 14px;
       font-weight: 700;
+      letter-spacing: 0.03em;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background 0.15s ease, transform 0.1s ease;
     }
 
     .cf-sticky-btn:hover {
-      background: var(--brand-blue-dark);
+      background: var(--btn-dark-hover);
+    }
+
+    .cf-sticky-btn:active {
+      transform: scale(0.99);
+    }
+
+    .cf-btn-arrow {
+      font-size: 17px;
+      line-height: 1;
+      font-weight: 600;
     }
 
     /* Modals (Admin & Policy Only — No Site Checkout Modal) */
@@ -638,13 +639,13 @@
     }
 
     .admin-tab.active {
-      background: var(--brand-blue);
+      background: var(--btn-dark);
       color: #ffffff;
-      border-color: var(--brand-blue);
+      border-color: var(--btn-dark);
     }
 
     .btn-primary {
-      background: var(--brand-blue);
+      background: var(--btn-dark);
       color: #ffffff;
       border: none;
       border-radius: 10px;
@@ -683,7 +684,7 @@
 </head>
 <body>
   <div class="cf-container">
-    <!-- Cosmofeed Top Creator Header -->
+    <!-- Top Creator Header -->
     <header class="cf-topbar">
       <div class="cf-topbar-left" id="topCreatorSlot">
         <img id="topDpImg" class="cf-dp-sm" alt="Pritam Mishra" decoding="async" />
@@ -715,22 +716,18 @@
           <span class="cf-price-mrp" id="displayMrp">₹999</span>
           <span class="cf-off-pill" id="displayDiscount">90% OFF</span>
         </div>
-        <button type="button" class="cf-buy-btn" onclick="triggerDirectCashfreeCheckout()">
-          BUY NOW — ₹99
-        </button>
-        <div class="cf-sub-assurance">Direct Cashfree Checkout • Instant Google Drive Access After Payment</div>
       </div>
     </section>
 
     <!-- Description Section -->
     <section class="cf-section">
-      <div class="cf-section-title">Description</div>
+      <div class="cf-section-title">About the Page</div>
       <div class="cf-desc" id="productDescription">Get instant access to 1,000+ viral videos and 100,000+ Hindi entertainment viral albums in one organized mega bundle. Built for creators, reels/shorts editors, and entertainment pages looking for ready-to-use high-engagement content without wasting hours searching.</div>
     </section>
 
     <!-- What's Included Section -->
     <section class="cf-section">
-      <div class="cf-section-title">What's Included</div>
+      <div class="cf-section-title">Key Highlights</div>
       <ul class="cf-checklist" id="whatsIncludedList"></ul>
     </section>
 
@@ -742,7 +739,7 @@
 
     <!-- Creator Section -->
     <section class="cf-section">
-      <div class="cf-section-title">You'll Get Access From</div>
+      <div class="cf-section-title">You'll Learn From</div>
       <div class="cf-creator-card">
         <div id="creatorCardDpSlot"></div>
         <div>
@@ -776,15 +773,19 @@
     </footer>
   </div>
 
-  <!-- Cosmofeed Sticky Bottom Buy Now Bar (Direct Cashfree Redirect) -->
+  <!-- Bottom Sticky Bar Matching Video (Amount total + BUY NOW ->) -->
   <div class="cf-sticky-bar">
     <div class="cf-sticky-inner">
-      <div>
-        <div class="cf-sticky-label">BUNDLE PRICE</div>
-        <div class="cf-sticky-price" id="stickyPriceText">₹99</div>
+      <div class="cf-amount-row">
+        <span class="cf-amount-label">Amount total</span>
+        <div class="cf-amount-values">
+          <span class="cf-sticky-mrp" id="stickyMrpText">₹999</span>
+          <span class="cf-sticky-price" id="stickyPriceText">₹99</span>
+        </div>
       </div>
       <button type="button" class="cf-sticky-btn" id="stickyBuyBtn" onclick="triggerDirectCashfreeCheckout()">
-        BUY NOW
+        <span>BUY NOW</span>
+        <span class="cf-btn-arrow">→</span>
       </button>
     </div>
   </div>
@@ -846,7 +847,7 @@
             <textarea id="editDescription" class="field-textarea"></textarea>
           </div>
           <div class="field-group">
-            <label class="field-label" for="editIncluded">What's Included (One item per line)</label>
+            <label class="field-label" for="editIncluded">Key Highlights (One item per line)</label>
             <textarea id="editIncluded" class="field-textarea"></textarea>
           </div>
         </div>
@@ -1076,7 +1077,7 @@
       document.getElementById("displayPrice").textContent = `₹${priceNum}`;
       document.getElementById("displayMrp").textContent = `₹${mrpNum}`;
       document.getElementById("displayDiscount").textContent = `${discountPct}% OFF`;
-      document.querySelector(".cf-buy-btn").textContent = `BUY NOW — ₹${priceNum}`;
+      document.getElementById("stickyMrpText").textContent = `₹${mrpNum}`;
       document.getElementById("stickyPriceText").textContent = `₹${priceNum}`;
       document.getElementById("productDescription").textContent = state.description;
       document.getElementById("creatorNameText").textContent = state.creatorName;
