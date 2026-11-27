@@ -1050,18 +1050,44 @@ Get instant access to a massive collection of Hindi entertainment and viral albu
       window.location.href = LOCKED_CONFIG.cashfreePaymentUrl;
     }
 
+    function readQueryStatusCaseInsensitive(params) {
+      for (const [key, val] of params.entries()) {
+        const k = key.toLowerCase();
+        if (k === "order_status" || k === "status" || k === "txstatus" || k === "payment_status") {
+          return String(val || "").trim().toUpperCase();
+        }
+      }
+      return "";
+    }
+
     function checkPaymentReturnAndUnlock() {
       const params = new URLSearchParams(window.location.search);
-      const orderStatus = (params.get("order_status") || "").toUpperCase();
-      const hasPaymentMarker =
-        orderStatus === "PAID" ||
-        orderStatus === "SUCCESS" ||
-        Boolean(params.get("payment_id")) ||
-        Boolean(params.get("cf_id")) ||
-        Boolean(params.get("link_id")) ||
-        Boolean(params.get("order_id"));
+      const rawStatus = readQueryStatusCaseInsensitive(params);
 
-      if (!hasPaymentMarker) return;
+      const failedStatuses = new Set([
+        "FAILED",
+        "FAIL",
+        "CANCELLED",
+        "CANCELED",
+        "CANCEL",
+        "USER_DROPPED",
+        "DROPPED",
+        "ERROR",
+        "PENDING",
+        "EXPIRED"
+      ]);
+
+      const paidStatuses = new Set(["PAID", "SUCCESS", "SUCCEEDED", "COMPLETED"]);
+
+      if (failedStatuses.has(rawStatus)) {
+        sendOrderWebhook(`Failed_${rawStatus}`);
+        return;
+      }
+
+      // Strictly require explicit PAID/SUCCESS status so failure redirects never fire Purchase
+      if (!paidStatuses.has(rawStatus)) {
+        return;
+      }
 
       let decodedDriveUrl = "";
       try {
