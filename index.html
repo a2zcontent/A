@@ -33,20 +33,22 @@
 
   <style>
     :root {
-      --bg-page: #f5f6f8;
-      --bg-card: #ffffff;
-      --text-primary: #111827;
-      --text-secondary: #4b5563;
-      --text-muted: #6b7280;
-      --border-light: #e5e7eb;
-      --accent: #111827;
-      --accent-hover: #1f2937;
-      --green: #16a34a;
-      --green-bg: #dcfce7;
-      --radius-card: 16px;
-      --radius-btn: 12px;
-      --shadow-card: 0 2px 10px rgba(17, 24, 39, 0.04);
-      --shadow-sticky: 0 -6px 24px rgba(17, 24, 39, 0.08);
+      --bg-page: #ffffff;
+      --bg-surface: #ffffff;
+      --bg-soft: #f8fafc;
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --border-hairline: #e2e8f0;
+      --brand-blue: #2563eb;
+      --brand-blue-dark: #1d4ed8;
+      --brand-blue-soft: #eff6ff;
+      --success-green: #15803d;
+      --success-bg: #dcfce7;
+      --radius-md: 12px;
+      --radius-lg: 14px;
+      --radius-pill: 999px;
+      --shadow-sticky: 0 -4px 18px rgba(15, 23, 42, 0.06);
     }
 
     * {
@@ -61,192 +63,189 @@
       color: var(--text-primary);
       line-height: 1.55;
       -webkit-font-smoothing: antialiased;
-      padding-bottom: 92px;
+      padding-bottom: 86px;
       content-visibility: auto;
     }
 
-    .app-shell {
-      max-width: 520px;
+    .cf-container {
+      max-width: 480px;
       margin: 0 auto;
-      background: var(--bg-page);
+      background: var(--bg-surface);
       min-height: 100vh;
+      border-left: 1px solid #f1f5f9;
+      border-right: 1px solid #f1f5f9;
     }
 
-    /* Top Creator Strip */
-    .top-creator-bar {
-      background: #0f172a;
-      color: #ffffff;
-      padding: 10px 16px;
+    /* Cosmofeed Top Creator Header */
+    .cf-topbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-size: 13px;
+      padding: 12px 16px;
+      background: #ffffff;
+      border-bottom: 1px solid var(--border-hairline);
+      position: sticky;
+      top: 0;
+      z-index: 30;
     }
 
-    .top-creator-left {
+    .cf-topbar-left {
       display: flex;
       align-items: center;
       gap: 10px;
       min-width: 0;
     }
 
-    .top-dp {
-      width: 30px;
-      height: 30px;
+    .cf-dp-sm {
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       object-fit: cover;
-      border: 1.5px solid rgba(255, 255, 255, 0.25);
+      border: 1px solid var(--border-hairline);
       flex-shrink: 0;
-      background: #1e293b;
+      background: #f1f5f9;
     }
 
-    .dp-fallback-badge {
-      width: 30px;
-      height: 30px;
+    .cf-dp-badge-sm {
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
-      background: #2563eb;
+      background: var(--brand-blue);
       color: #ffffff;
-      font-weight: 700;
       font-size: 12px;
+      font-weight: 700;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
     }
 
-    .top-creator-name {
-      font-weight: 600;
+    .cf-creator-handle {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-primary);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    .verified-pill {
+    .cf-verified-chip {
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      background: rgba(255, 255, 255, 0.12);
-      color: #f9fafb;
+      background: var(--brand-blue-soft);
+      color: var(--brand-blue);
       font-size: 11px;
-      font-weight: 600;
-      padding: 3px 8px;
-      border-radius: 999px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
       flex-shrink: 0;
     }
 
-    /* Banner Section */
-    .hero-card {
-      background: var(--bg-card);
-      border-bottom-left-radius: var(--radius-card);
-      border-bottom-right-radius: var(--radius-card);
-      overflow: hidden;
-      box-shadow: var(--shadow-card);
+    /* Hero Banner & Main Product Info */
+    .cf-hero {
+      background: #ffffff;
+      padding-bottom: 18px;
+      border-bottom: 8px solid #f8fafc;
     }
 
-    .hero-banner-wrap {
+    .cf-banner-box {
       width: 100%;
-      min-height: 200px;
-      background: #111827;
-      position: relative;
+      min-height: 190px;
+      background: #f8fafc;
+      overflow: hidden;
     }
 
-    .hero-banner-img {
+    .cf-banner-img {
       width: 100%;
       height: auto;
       display: block;
       object-fit: cover;
     }
 
-    .hero-body {
-      padding: 18px 16px 20px;
+    .cf-hero-body {
+      padding: 16px 16px 0;
     }
 
-    .product-title {
-      font-size: 21px;
+    .cf-title {
+      font-size: 20px;
       font-weight: 800;
       color: var(--text-primary);
-      letter-spacing: -0.02em;
-      line-height: 1.3;
+      line-height: 1.32;
+      letter-spacing: -0.015em;
       margin-bottom: 10px;
     }
 
-    .price-row {
+    .cf-price-wrap {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       flex-wrap: wrap;
       margin-bottom: 14px;
     }
 
-    .price-now {
-      font-size: 24px;
+    .cf-price-now {
+      font-size: 22px;
       font-weight: 800;
       color: var(--text-primary);
     }
 
-    .price-mrp {
-      font-size: 15px;
+    .cf-price-mrp {
+      font-size: 14px;
       color: var(--text-muted);
       text-decoration: line-through;
       font-weight: 500;
     }
 
-    .discount-tag {
-      background: var(--green-bg);
-      color: var(--green);
-      font-size: 12px;
+    .cf-off-pill {
+      background: var(--success-bg);
+      color: var(--success-green);
+      font-size: 11.5px;
       font-weight: 700;
-      padding: 3px 9px;
-      border-radius: 999px;
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
     }
 
-    .hero-cta-btn {
+    .cf-buy-btn {
       width: 100%;
-      background: var(--accent);
+      background: var(--brand-blue);
       color: #ffffff;
       border: none;
-      border-radius: var(--radius-btn);
-      padding: 15px 18px;
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
       font-size: 15px;
       font-weight: 700;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
       transition: background 0.15s ease, transform 0.1s ease;
     }
 
-    .hero-cta-btn:hover {
-      background: var(--accent-hover);
+    .cf-buy-btn:hover {
+      background: var(--brand-blue-dark);
     }
 
-    .hero-cta-btn:active {
+    .cf-buy-btn:active {
       transform: scale(0.99);
     }
 
-    .instant-note {
-      margin-top: 10px;
+    .cf-sub-assurance {
+      margin-top: 8px;
       text-align: center;
       font-size: 12px;
       color: var(--text-muted);
       font-weight: 500;
     }
 
-    /* Section Cards */
-    .section-card {
-      background: var(--bg-card);
-      border-radius: var(--radius-card);
+    /* Clean Cosmofeed White Sections */
+    .cf-section {
+      background: #ffffff;
       padding: 18px 16px;
-      margin: 12px 12px 0;
-      box-shadow: var(--shadow-card);
-      border: 1px solid #f0f1f4;
+      border-bottom: 8px solid #f8fafc;
       content-visibility: auto;
-      contain-intrinsic-size: auto 180px;
+      contain-intrinsic-size: auto 160px;
     }
 
-    .section-heading {
-      font-size: 13px;
+    .cf-section-title {
+      font-size: 12.5px;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.05em;
@@ -254,35 +253,35 @@
       margin-bottom: 12px;
     }
 
-    .description-text {
+    .cf-desc {
       font-size: 14px;
       color: var(--text-secondary);
       white-space: pre-line;
       line-height: 1.65;
     }
 
-    .included-list {
+    .cf-checklist {
       list-style: none;
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
 
-    .included-item {
+    .cf-check-row {
       display: flex;
       align-items: flex-start;
       gap: 10px;
       font-size: 14px;
-      font-weight: 500;
       color: var(--text-primary);
+      font-weight: 500;
     }
 
-    .check-circle {
+    .cf-check-icon {
       width: 20px;
       height: 20px;
       border-radius: 50%;
-      background: var(--green-bg);
-      color: var(--green);
+      background: var(--brand-blue-soft);
+      color: var(--brand-blue);
       font-size: 12px;
       font-weight: 800;
       display: inline-flex;
@@ -292,109 +291,114 @@
       margin-top: 1px;
     }
 
-    /* Second Showcase Photo Card (Below Content) */
-    .preview-showcase-img {
+    /* Second Showcase Photo Below Content */
+    .cf-preview-img {
       width: 100%;
       height: auto;
       display: block;
-      border-radius: 12px;
-      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-hairline);
     }
 
-    .preview-placeholder-box {
+    .cf-preview-empty {
       border: 1.5px dashed #cbd5e1;
       background: #f8fafc;
-      border-radius: 12px;
-      padding: 20px 14px;
+      border-radius: var(--radius-md);
+      padding: 18px 14px;
       text-align: center;
-      color: var(--text-secondary);
       font-size: 13px;
+      color: var(--text-muted);
     }
 
     /* Creator Card */
-    .creator-box {
+    .cf-creator-card {
       display: flex;
       align-items: center;
       gap: 12px;
+      padding: 12px;
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-md);
+      background: #ffffff;
     }
 
-    .creator-card-dp {
-      width: 52px;
-      height: 52px;
+    .cf-dp-lg {
+      width: 48px;
+      height: 48px;
       border-radius: 50%;
       object-fit: cover;
-      border: 1px solid var(--border-light);
+      border: 1px solid var(--border-hairline);
       flex-shrink: 0;
-      background: #f3f4f6;
+      background: #f1f5f9;
     }
 
-    .creator-card-fallback {
-      width: 52px;
-      height: 52px;
+    .cf-dp-badge-lg {
+      width: 48px;
+      height: 48px;
       border-radius: 50%;
-      background: #111827;
+      background: var(--brand-blue);
       color: #ffffff;
+      font-size: 15px;
       font-weight: 700;
-      font-size: 16px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
     }
 
-    .creator-info-title {
+    .cf-creator-name {
       font-size: 15px;
       font-weight: 700;
       color: var(--text-primary);
     }
 
-    .creator-info-sub {
-      font-size: 13px;
+    .cf-creator-sub {
+      font-size: 12.5px;
       color: var(--text-muted);
     }
 
     /* Testimonials */
-    .review-item {
+    .cf-review {
       padding: 12px 0;
       border-bottom: 1px solid #f1f5f9;
     }
 
-    .review-item:last-child {
+    .cf-review:last-child {
       border-bottom: none;
       padding-bottom: 0;
     }
 
-    .review-top {
+    .cf-review-head {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 4px;
       font-size: 13px;
       font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 4px;
     }
 
-    .stars {
+    .cf-stars {
       color: #f59e0b;
       letter-spacing: 1px;
     }
 
-    .review-text {
+    .cf-review-body {
       font-size: 13.5px;
       color: var(--text-secondary);
     }
 
-    /* FAQ Accordion */
-    .faq-item {
+    /* FAQs */
+    .cf-faq {
       border-bottom: 1px solid #f1f5f9;
       padding: 10px 0;
     }
 
-    .faq-item:last-child {
+    .cf-faq:last-child {
       border-bottom: none;
       padding-bottom: 0;
     }
 
-    .faq-q {
+    .cf-faq-btn {
       width: 100%;
       background: none;
       border: none;
@@ -409,136 +413,141 @@
       gap: 10px;
     }
 
-    .faq-a {
+    .cf-faq-ans {
       display: none;
       padding-top: 8px;
       font-size: 13.5px;
       color: var(--text-secondary);
     }
 
-    .faq-item.open .faq-a {
+    .cf-faq.open .cf-faq-ans {
       display: block;
     }
 
-    /* Post-Payment Delivery Unlock Card */
-    .delivery-unlock-card {
+    /* Post-Payment Delivery Unlock Box */
+    .cf-delivery-box {
       display: none;
-      background: #ecfdf5;
-      border: 1.5px solid #10b981;
-      border-radius: var(--radius-card);
-      padding: 18px 16px;
-      margin: 12px 12px 0;
+      margin: 12px 16px 0;
+      padding: 16px;
+      background: #f0fdf4;
+      border: 1.5px solid #22c55e;
+      border-radius: var(--radius-md);
     }
 
-    .delivery-unlock-card.active {
+    .cf-delivery-box.active {
       display: block;
     }
 
-    .delivery-title {
-      font-size: 16px;
+    .cf-delivery-title {
+      font-size: 15px;
       font-weight: 800;
-      color: #065f46;
-      margin-bottom: 6px;
+      color: #14532d;
+      margin-bottom: 4px;
     }
 
-    .delivery-desc {
-      font-size: 13.5px;
-      color: #047857;
+    .cf-delivery-text {
+      font-size: 13px;
+      color: #166534;
       margin-bottom: 12px;
     }
 
-    .drive-access-btn {
-      display: inline-flex;
+    .cf-drive-link {
+      display: flex;
       align-items: center;
       justify-content: center;
       width: 100%;
-      background: #059669;
+      background: #16a34a;
       color: #ffffff;
       text-decoration: none;
       font-weight: 700;
       font-size: 14px;
-      padding: 13px 16px;
-      border-radius: var(--radius-btn);
+      padding: 12px 14px;
+      border-radius: var(--radius-md);
     }
 
-    /* Footer & Admin Trigger */
-    .site-footer {
+    /* Footer */
+    .cf-footer {
+      background: #ffffff;
+      padding: 20px 16px 16px;
       text-align: center;
-      padding: 20px 16px 12px;
       font-size: 12px;
       color: var(--text-muted);
     }
 
-    .footer-links {
+    .cf-footer-links {
       display: flex;
       justify-content: center;
       gap: 14px;
-      margin-bottom: 8px;
       flex-wrap: wrap;
+      margin-bottom: 8px;
     }
 
-    .footer-link-btn {
+    .cf-link-btn {
       background: none;
       border: none;
       color: var(--text-muted);
       font-size: 12px;
-      cursor: pointer;
       text-decoration: underline;
+      cursor: pointer;
     }
 
-    /* Sticky Bottom Bar */
-    .sticky-bottom-bar {
+    /* Sticky Bottom Bar (Cosmofeed Style) */
+    .cf-sticky-bar {
       position: fixed;
-      bottom: 0;
       left: 0;
       right: 0;
+      bottom: 0;
       background: #ffffff;
-      border-top: 1px solid var(--border-light);
+      border-top: 1px solid var(--border-hairline);
       box-shadow: var(--shadow-sticky);
       z-index: 40;
     }
 
-    .sticky-bottom-inner {
-      max-width: 520px;
+    .cf-sticky-inner {
+      max-width: 480px;
       margin: 0 auto;
-      padding: 10px 14px;
+      padding: 10px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
     }
 
-    .sticky-price-label {
+    .cf-sticky-label {
       font-size: 11px;
-      color: var(--text-muted);
       font-weight: 600;
+      color: var(--text-muted);
     }
 
-    .sticky-price-value {
+    .cf-sticky-price {
       font-size: 18px;
       font-weight: 800;
       color: var(--text-primary);
     }
 
-    .sticky-buy-btn {
+    .cf-sticky-btn {
       flex: 1;
-      max-width: 260px;
-      background: var(--accent);
+      max-width: 240px;
+      background: var(--brand-blue);
       color: #ffffff;
       border: none;
-      border-radius: var(--radius-btn);
-      padding: 13px 18px;
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
       font-size: 14px;
       font-weight: 700;
       cursor: pointer;
     }
 
-    /* Modals (Admin & Policy Only — No Checkout Modal) */
+    .cf-sticky-btn:hover {
+      background: var(--brand-blue-dark);
+    }
+
+    /* Modals (Admin & Policy Only — No Site Checkout Modal) */
     .modal-backdrop {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(15, 23, 42, 0.55);
+      background: rgba(15, 23, 42, 0.5);
       z-index: 60;
       align-items: center;
       justify-content: center;
@@ -551,13 +560,13 @@
 
     .modal-box {
       width: 100%;
-      max-width: 480px;
+      max-width: 460px;
       max-height: 88vh;
       overflow-y: auto;
       background: #ffffff;
-      border-radius: 16px;
+      border-radius: var(--radius-lg);
       padding: 20px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.18);
     }
 
     .modal-header {
@@ -568,16 +577,18 @@
     }
 
     .modal-title {
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 800;
+      color: var(--text-primary);
     }
 
     .close-btn {
-      background: #f3f4f6;
-      border: none;
       width: 30px;
       height: 30px;
       border-radius: 50%;
+      border: none;
+      background: #f1f5f9;
+      color: var(--text-primary);
       font-size: 16px;
       font-weight: 700;
       cursor: pointer;
@@ -589,7 +600,7 @@
 
     .field-label {
       display: block;
-      font-size: 12.5px;
+      font-size: 12px;
       font-weight: 700;
       color: var(--text-primary);
       margin-bottom: 5px;
@@ -597,7 +608,7 @@
 
     .field-input, .field-textarea {
       width: 100%;
-      border: 1px solid #d1d5db;
+      border: 1px solid #cbd5e1;
       border-radius: 10px;
       padding: 10px 12px;
       font-size: 13.5px;
@@ -605,7 +616,7 @@
     }
 
     .field-textarea {
-      min-height: 80px;
+      min-height: 78px;
       resize: vertical;
     }
 
@@ -618,8 +629,8 @@
     .admin-tab {
       flex: 1;
       padding: 8px;
-      border: 1px solid #d1d5db;
-      background: #f9fafb;
+      border: 1px solid #cbd5e1;
+      background: #f8fafc;
       border-radius: 8px;
       font-size: 12px;
       font-weight: 700;
@@ -627,13 +638,13 @@
     }
 
     .admin-tab.active {
-      background: #111827;
+      background: var(--brand-blue);
       color: #ffffff;
-      border-color: #111827;
+      border-color: var(--brand-blue);
     }
 
     .btn-primary {
-      background: #111827;
+      background: var(--brand-blue);
       color: #ffffff;
       border: none;
       border-radius: 10px;
@@ -644,9 +655,9 @@
     }
 
     .btn-secondary {
-      background: #f3f4f6;
-      color: #111827;
-      border: 1px solid #d1d5db;
+      background: #f1f5f9;
+      color: var(--text-primary);
+      border: 1px solid #cbd5e1;
       border-radius: 10px;
       padding: 10px 14px;
       font-size: 13px;
@@ -663,7 +674,7 @@
 
     .pin-error {
       color: #dc2626;
-      font-size: 12.5px;
+      font-size: 12px;
       font-weight: 600;
       margin-top: 6px;
       display: none;
@@ -671,121 +682,121 @@
   </style>
 </head>
 <body>
-  <div class="app-shell">
-    <!-- Top Creator Header -->
-    <div class="top-creator-bar">
-      <div class="top-creator-left" id="topCreatorSlot">
-        <img id="topDpImg" class="top-dp" alt="Pritam Mishra" decoding="async" />
-        <span class="top-creator-name" id="topCreatorName">Pritam Mishra</span>
+  <div class="cf-container">
+    <!-- Cosmofeed Top Creator Header -->
+    <header class="cf-topbar">
+      <div class="cf-topbar-left" id="topCreatorSlot">
+        <img id="topDpImg" class="cf-dp-sm" alt="Pritam Mishra" decoding="async" />
+        <span class="cf-creator-handle" id="topCreatorName">Pritam Mishra</span>
       </div>
-      <span class="verified-pill">✓ Instant Access</span>
-    </div>
+      <span class="cf-verified-chip">✓ Instant Access</span>
+    </header>
 
     <!-- Post-Payment Automatic Delivery Unlock Box -->
-    <div class="delivery-unlock-card" id="deliveryUnlockBox">
-      <div class="delivery-title">🎉 Payment Verified — Your Bundle Is Unlocked!</div>
-      <div class="delivery-desc">
-        Thank you for your purchase. Click below to access your complete Google Drive bundle immediately.
+    <div class="cf-delivery-box" id="deliveryUnlockBox">
+      <div class="cf-delivery-title">🎉 Payment Verified — Your Bundle Is Unlocked!</div>
+      <div class="cf-delivery-text">
+        Thank you for your purchase. Open your Google Drive bundle below immediately.
       </div>
-      <a id="unlockedDriveLink" class="drive-access-btn" href="#" target="_blank" rel="noopener noreferrer">
+      <a id="unlockedDriveLink" class="cf-drive-link" href="#" target="_blank" rel="noopener noreferrer">
         Open Google Drive Bundle →
       </a>
     </div>
 
-    <!-- Main Hero Card -->
-    <div class="hero-card">
-      <div class="hero-banner-wrap">
-        <img id="heroBannerImg" class="hero-banner-img" alt="1000+ Viral Videos & 100,000+ Entertainment Viral Albums" fetchpriority="high" decoding="async" />
+    <!-- Main Hero Section -->
+    <section class="cf-hero">
+      <div class="cf-banner-box">
+        <img id="heroBannerImg" class="cf-banner-img" alt="1000+ Viral Videos & 100,000+ Entertainment Viral Albums" fetchpriority="high" decoding="async" />
       </div>
-      <div class="hero-body">
-        <h1 class="product-title" id="productTitle">1000+ Viral Videos &amp; 100,000+ Entertainment Viral Albums</h1>
-        <div class="price-row">
-          <span class="price-now" id="displayPrice">₹99</span>
-          <span class="price-mrp" id="displayMrp">₹999</span>
-          <span class="discount-tag" id="displayDiscount">90% OFF</span>
+      <div class="cf-hero-body">
+        <h1 class="cf-title" id="productTitle">1000+ Viral Videos &amp; 100,000+ Entertainment Viral Albums</h1>
+        <div class="cf-price-wrap">
+          <span class="cf-price-now" id="displayPrice">₹99</span>
+          <span class="cf-price-mrp" id="displayMrp">₹999</span>
+          <span class="cf-off-pill" id="displayDiscount">90% OFF</span>
         </div>
-        <button type="button" class="hero-cta-btn" onclick="triggerDirectCashfreeCheckout()">
+        <button type="button" class="cf-buy-btn" onclick="triggerDirectCashfreeCheckout()">
           BUY NOW — ₹99
         </button>
-        <div class="instant-note">Direct Cashfree Checkout • Instant Google Drive Delivery After Payment</div>
+        <div class="cf-sub-assurance">Direct Cashfree Checkout • Instant Google Drive Access After Payment</div>
       </div>
-    </div>
+    </section>
 
-    <!-- Description Card -->
-    <div class="section-card">
-      <div class="section-heading">Description</div>
-      <div class="description-text" id="productDescription">Get instant access to 1,000+ viral videos and 100,000+ Hindi entertainment viral albums in one organized mega bundle. Built for creators, reels/shorts editors, and entertainment pages looking for ready-to-use high-engagement content without wasting hours searching.</div>
-    </div>
+    <!-- Description Section -->
+    <section class="cf-section">
+      <div class="cf-section-title">Description</div>
+      <div class="cf-desc" id="productDescription">Get instant access to 1,000+ viral videos and 100,000+ Hindi entertainment viral albums in one organized mega bundle. Built for creators, reels/shorts editors, and entertainment pages looking for ready-to-use high-engagement content without wasting hours searching.</div>
+    </section>
 
-    <!-- What's Included Card -->
-    <div class="section-card">
-      <div class="section-heading">What's Included</div>
-      <ul class="included-list" id="whatsIncludedList"></ul>
-    </div>
+    <!-- What's Included Section -->
+    <section class="cf-section">
+      <div class="cf-section-title">What's Included</div>
+      <ul class="cf-checklist" id="whatsIncludedList"></ul>
+    </section>
 
     <!-- Second Showcase Photo Section (Below Content) -->
-    <div class="section-card" id="secondShowcaseSection">
-      <div class="section-heading">Bundle Preview</div>
+    <section class="cf-section" id="secondShowcaseSection">
+      <div class="cf-section-title">Bundle Preview</div>
       <div id="secondShowcaseContainer"></div>
-    </div>
+    </section>
 
-    <!-- Creator Access Card -->
-    <div class="section-card">
-      <div class="section-heading">You'll Get Access From</div>
-      <div class="creator-box">
+    <!-- Creator Section -->
+    <section class="cf-section">
+      <div class="cf-section-title">You'll Get Access From</div>
+      <div class="cf-creator-card">
         <div id="creatorCardDpSlot"></div>
         <div>
-          <div class="creator-info-title" id="creatorNameText">Pritam Mishra</div>
-          <div class="creator-info-sub" id="creatorRoleText">Verified Digital Bundle Creator</div>
+          <div class="cf-creator-name" id="creatorNameText">Pritam Mishra</div>
+          <div class="cf-creator-sub" id="creatorRoleText">Verified Digital Bundle Creator</div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- Testimonials Card -->
-    <div class="section-card">
-      <div class="section-heading">Testimonials</div>
+    <!-- Testimonials Section -->
+    <section class="cf-section">
+      <div class="cf-section-title">Testimonials</div>
       <div id="testimonialsList"></div>
-    </div>
+    </section>
 
-    <!-- FAQs Card -->
-    <div class="section-card">
-      <div class="section-heading">Frequently Asked Questions</div>
+    <!-- FAQs Section -->
+    <section class="cf-section">
+      <div class="cf-section-title">Frequently Asked Questions</div>
       <div id="faqList"></div>
-    </div>
+    </section>
 
     <!-- Footer -->
-    <footer class="site-footer">
-      <div class="footer-links">
-        <button type="button" class="footer-link-btn" onclick="openPolicyModal('terms')">Terms &amp; Conditions</button>
-        <button type="button" class="footer-link-btn" onclick="openPolicyModal('refund')">Refund Policy</button>
-        <button type="button" class="footer-link-btn" onclick="openPolicyModal('contact')">Contact</button>
-        <button type="button" class="footer-link-btn" onclick="openAdminModal()">Admin</button>
+    <footer class="cf-footer">
+      <div class="cf-footer-links">
+        <button type="button" class="cf-link-btn" onclick="openPolicyModal('terms')">Terms &amp; Conditions</button>
+        <button type="button" class="cf-link-btn" onclick="openPolicyModal('refund')">Refund Policy</button>
+        <button type="button" class="cf-link-btn" onclick="openPolicyModal('contact')">Contact</button>
+        <button type="button" class="cf-link-btn" onclick="openAdminModal()">Admin</button>
       </div>
       <div>© <span id="yearSpan">2026</span> <span id="footerBrandName">Pritam Mishra</span>. All rights reserved.</div>
     </footer>
   </div>
 
-  <!-- Sticky Bottom Buy Now Bar (Direct Cashfree Redirect — No Site Checkout Modal) -->
-  <div class="sticky-bottom-bar">
-    <div class="sticky-bottom-inner">
+  <!-- Cosmofeed Sticky Bottom Buy Now Bar (Direct Cashfree Redirect) -->
+  <div class="cf-sticky-bar">
+    <div class="cf-sticky-inner">
       <div>
-        <div class="sticky-price-label">BUNDLE PRICE</div>
-        <div class="sticky-price-value" id="stickyPriceText">₹99</div>
+        <div class="cf-sticky-label">BUNDLE PRICE</div>
+        <div class="cf-sticky-price" id="stickyPriceText">₹99</div>
       </div>
-      <button type="button" class="sticky-buy-btn" id="stickyBuyBtn" onclick="triggerDirectCashfreeCheckout()">
+      <button type="button" class="cf-sticky-btn" id="stickyBuyBtn" onclick="triggerDirectCashfreeCheckout()">
         BUY NOW
       </button>
     </div>
   </div>
 
-  <!-- Policy / Info Modal -->
+  <!-- Policy Modal -->
   <div class="modal-backdrop" id="policyModal">
     <div class="modal-box">
       <div class="modal-header">
         <div class="modal-title" id="policyModalTitle">Policy</div>
         <button type="button" class="close-btn" onclick="closeModal('policyModal')">×</button>
       </div>
-      <div id="policyModalBody" class="description-text"></div>
+      <div id="policyModalBody" class="cf-desc"></div>
     </div>
   </div>
 
@@ -813,7 +824,6 @@
           <button type="button" class="admin-tab" data-tab="content" onclick="switchAdminTab('content')">Reviews &amp; FAQ</button>
         </div>
 
-        <!-- General Tab -->
         <div id="adminTab-general">
           <div class="field-group">
             <label class="field-label" for="editTitle">Product Title</label>
@@ -841,7 +851,6 @@
           </div>
         </div>
 
-        <!-- Photos & DP Tab -->
         <div id="adminTab-photos" style="display:none;">
           <div class="field-group">
             <label class="field-label" for="editDpUrl">Creator DP Path / URL (Default: ./Dp.PNG)</label>
@@ -860,7 +869,6 @@
           </div>
         </div>
 
-        <!-- Reviews & FAQ Tab -->
         <div id="adminTab-content" style="display:none;">
           <div class="field-group">
             <label class="field-label" for="editTestimonials">Testimonials (Format: Name | Review)</label>
@@ -1034,11 +1042,11 @@
       }
     }
 
-    function renderCreatorDp(containerEl, imgId, fallbackClass, srcVal, initialsText) {
+    function renderCreatorDp(containerEl, imgId, sizeClass, badgeClass, srcVal, initialsText) {
       containerEl.innerHTML = "";
       const img = document.createElement("img");
       img.id = imgId;
-      img.className = fallbackClass === "top-dp" ? "top-dp" : "creator-card-dp";
+      img.className = sizeClass;
       img.alt = state.creatorName;
       img.decoding = "async";
       img.src = srcVal || "./Dp.PNG";
@@ -1050,7 +1058,7 @@
           return;
         }
         const badge = document.createElement("span");
-        badge.className = fallbackClass === "top-dp" ? "dp-fallback-badge" : "creator-card-fallback";
+        badge.className = badgeClass;
         badge.textContent = initialsText || "PM";
         img.replaceWith(badge);
       };
@@ -1068,7 +1076,7 @@
       document.getElementById("displayPrice").textContent = `₹${priceNum}`;
       document.getElementById("displayMrp").textContent = `₹${mrpNum}`;
       document.getElementById("displayDiscount").textContent = `${discountPct}% OFF`;
-      document.querySelector(".hero-cta-btn").textContent = `BUY NOW — ₹${priceNum}`;
+      document.querySelector(".cf-buy-btn").textContent = `BUY NOW — ₹${priceNum}`;
       document.getElementById("stickyPriceText").textContent = `₹${priceNum}`;
       document.getElementById("productDescription").textContent = state.description;
       document.getElementById("creatorNameText").textContent = state.creatorName;
@@ -1083,21 +1091,18 @@
         .map((w) => w[0].toUpperCase())
         .join("") || "PM";
 
-      // Top bar DP
       const topLeft = document.getElementById("topCreatorSlot");
       topLeft.innerHTML = "";
-      renderCreatorDp(topLeft, "topDpImg", "top-dp", state.dpPath, initials);
+      renderCreatorDp(topLeft, "topDpImg", "cf-dp-sm", "cf-dp-badge-sm", state.dpPath, initials);
       const topNameSpan = document.createElement("span");
-      topNameSpan.className = "top-creator-name";
+      topNameSpan.className = "cf-creator-handle";
       topNameSpan.id = "topCreatorName";
       topNameSpan.textContent = state.creatorName;
       topLeft.appendChild(topNameSpan);
 
-      // Creator section DP
       const cardDpSlot = document.getElementById("creatorCardDpSlot");
-      renderCreatorDp(cardDpSlot, "creatorCardDpImg", "creator-card-dp", state.dpPath, initials);
+      renderCreatorDp(cardDpSlot, "creatorCardDpImg", "cf-dp-lg", "cf-dp-badge-lg", state.dpPath, initials);
 
-      // Main Hero Banner (./banner.PNG)
       const bannerImg = document.getElementById("heroBannerImg");
       bannerImg.src = state.bannerPath || "./banner.PNG";
       bannerImg.onerror = function () {
@@ -1109,39 +1114,36 @@
         }
       };
 
-      // What's Included List
       const incList = document.getElementById("whatsIncludedList");
       incList.innerHTML = "";
       const incFrag = document.createDocumentFragment();
       state.included.forEach((line) => {
         if (!line.trim()) return;
         const li = document.createElement("li");
-        li.className = "included-item";
-        li.innerHTML = `<span class="check-circle">✓</span><span>${escapeHtml(line)}</span>`;
+        li.className = "cf-check-row";
+        li.innerHTML = `<span class="cf-check-icon">✓</span><span>${escapeHtml(line)}</span>`;
         incFrag.appendChild(li);
       });
       incList.appendChild(incFrag);
 
-      // Second Showcase Photo Below Content (./preview.jpg)
       const showcaseContainer = document.getElementById("secondShowcaseContainer");
       showcaseContainer.innerHTML = "";
       const previewSrc = (state.previewPath || "./preview.jpg").trim();
       if (previewSrc) {
         const previewImg = document.createElement("img");
-        previewImg.className = "preview-showcase-img";
+        previewImg.className = "cf-preview-img";
         previewImg.alt = "Bundle Preview";
         previewImg.loading = "lazy";
         previewImg.decoding = "async";
         previewImg.src = previewSrc;
         previewImg.onerror = function () {
-          showcaseContainer.innerHTML = `<div class="preview-placeholder-box">Add <strong>preview.jpg</strong> in your repository root or upload an image in Admin → Photos &amp; DP to display the bundle preview here.</div>`;
+          showcaseContainer.innerHTML = `<div class="cf-preview-empty">Add <strong>preview.jpg</strong> in your repository root or upload an image in Admin → Photos &amp; DP to display the bundle preview here.</div>`;
         };
         showcaseContainer.appendChild(previewImg);
       } else {
-        showcaseContainer.innerHTML = `<div class="preview-placeholder-box">Add <strong>preview.jpg</strong> in your repository root or upload an image in Admin → Photos &amp; DP to display the bundle preview here.</div>`;
+        showcaseContainer.innerHTML = `<div class="cf-preview-empty">Add <strong>preview.jpg</strong> in your repository root or upload an image in Admin → Photos &amp; DP to display the bundle preview here.</div>`;
       }
 
-      // Testimonials
       const revList = document.getElementById("testimonialsList");
       revList.innerHTML = "";
       const revFrag = document.createDocumentFragment();
@@ -1150,19 +1152,18 @@
         const rName = (parts[0] || "Verified Buyer").trim();
         const rText = (parts.slice(1).join("|") || entry).trim();
         const div = document.createElement("div");
-        div.className = "review-item";
+        div.className = "cf-review";
         div.innerHTML = `
-          <div class="review-top">
+          <div class="cf-review-head">
             <span>${escapeHtml(rName)}</span>
-            <span class="stars">★★★★★</span>
+            <span class="cf-stars">★★★★★</span>
           </div>
-          <div class="review-text">${escapeHtml(rText)}</div>
+          <div class="cf-review-body">${escapeHtml(rText)}</div>
         `;
         revFrag.appendChild(div);
       });
       revList.appendChild(revFrag);
 
-      // FAQs
       const faqList = document.getElementById("faqList");
       faqList.innerHTML = "";
       const faqFrag = document.createDocumentFragment();
@@ -1171,13 +1172,13 @@
         const qText = (parts[0] || "Question").trim();
         const aText = (parts.slice(1).join("|") || "").trim();
         const item = document.createElement("div");
-        item.className = "faq-item";
+        item.className = "cf-faq";
         item.innerHTML = `
-          <button type="button" class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+          <button type="button" class="cf-faq-btn" onclick="this.parentElement.classList.toggle('open')">
             <span>${escapeHtml(qText)}</span>
             <span>+</span>
           </button>
-          <div class="faq-a">${escapeHtml(aText)}</div>
+          <div class="cf-faq-ans">${escapeHtml(aText)}</div>
         `;
         faqFrag.appendChild(item);
       });
