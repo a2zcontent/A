@@ -1077,7 +1077,14 @@ Get instant access to a massive collection of Hindi entertainment and viral albu
         "EXPIRED"
       ]);
 
-      const paidStatuses = new Set(["PAID", "SUCCESS", "SUCCEEDED", "COMPLETED"]);
+      const paidStatuses = new Set([
+        "PAID",
+        "SUCCESS",
+        "SUCCEEDED",
+        "COMPLETED",
+        "PAYMENT_SUCCESS",
+        "PAYMENT_PAID"
+      ]);
 
       if (failedStatuses.has(rawStatus)) {
         sendOrderWebhook(`Failed_${rawStatus}`);
@@ -1103,8 +1110,23 @@ Get instant access to a massive collection of Hindi entertainment and viral albu
         unlockBox.classList.add("active");
       }
 
-      if (!sessionStorage.getItem(PURCHASE_FIRED_KEY)) {
-        sessionStorage.setItem(PURCHASE_FIRED_KEY, "1");
+      const orderRef =
+        params.get("order_id") ||
+        params.get("cf_id") ||
+        params.get("payment_id") ||
+        params.get("link_id") ||
+        "DEFAULT_PAID";
+      const dedupeKey = `${PURCHASE_FIRED_KEY}_${orderRef}`;
+      const alreadyTracked =
+        sessionStorage.getItem(dedupeKey) === "1" ||
+        localStorage.getItem(dedupeKey) === "1";
+
+      if (!alreadyTracked) {
+        sessionStorage.setItem(dedupeKey, "1");
+        try {
+          localStorage.setItem(dedupeKey, "1");
+        } catch (e) {}
+
         trackMetaEvent("Purchase", {
           value: Number(state.price) || 99,
           currency: "INR",
@@ -1112,6 +1134,13 @@ Get instant access to a massive collection of Hindi entertainment and viral albu
         });
         sendOrderWebhook("Paid");
       }
+
+      // Remove status query from URL so page reload never double-counts Purchase
+      try {
+        if (window.history && window.history.replaceState) {
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
+      } catch (e) {}
     }
 
     function renderCreatorDp(containerEl, imgId, sizeClass, badgeClass, srcVal, initialsText) {
